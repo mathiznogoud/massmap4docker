@@ -44,43 +44,12 @@ checkArgs(){
 
 setupTools(){
     echo -e "${GREEN}[+] Setting things up.${RESET}"
-    sudo apt update -y
-    sudo apt upgrade -y
-    sudo apt autoremove -y
-    sudo apt clean
-    sudo apt install -y gcc g++ make libpcap-dev xsltproc
-    
     echo -e "${GREEN}[+] Creating results directory.${RESET}"
     mkdir -p $RESULTS_PATH
     mkdir -p $RESULTS_PATH/tmp
     echo -e "${GREEN}[+] Results directory at $RESULTS_PATH"
 }
 
-
-installTools(){
-    LATEST_MASSCAN="1.0.6"
-    if [ ! -x "$(command -v masscan)" ]; then
-        echo -e "${GREEN}[+] Installing Masscan.${RESET}"
-        git clone https://github.com/robertdavidgraham/masscan
-        cd masscan
-        make -j
-        sudo make -j install
-        cd $WORKING_DIR
-        rm -rf masscan
-    else
-        if [ "$LATEST_MASSCAN" == "$(masscan -V | grep "Masscan version" | cut -d " " -f 3)" ]; then
-            echo -e "${BLUE}[-] Latest version of Masscan already installed. Skipping...${RESET}"
-        else
-            echo -e "${GREEN}[+] Upgrading Masscan to the latest version.${RESET}"
-            git clone https://github.com/robertdavidgraham/masscan
-            cd masscan
-            make -j
-            sudo make -j install
-            cd $WORKING_DIR
-            rm -rf masscan*
-        fi
-    fi
-}
 
 
 portScan(){
@@ -104,5 +73,4 @@ portScan(){
 displayLogo
 checkArgs $TARGET 
 setupTools
-installTools
 portScan
